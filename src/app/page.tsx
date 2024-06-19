@@ -10,8 +10,8 @@ export default function Home() {
     e.preventDefault();
     if (urlInput) {
       try {
-        const response = await fetch('/api/scrape-tables', {
-          method: 'POST',
+        const response = await fetch('/api/scrape', {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -37,7 +37,7 @@ export default function Home() {
       <form onSubmit={handleSubmit} className='flex justify-center items-center bg-[#9ca3af] p-12'>
         <div className='mb-4'>
           <label className="text-2xl my-12 font-bold flex justify-center items-center" htmlFor="url-input">Please Input Your URL</label>
-          <input 
+          <input
             id="url-input"
             type="text"
             className='p-6 h-6 w-96 items-center'
@@ -46,7 +46,7 @@ export default function Home() {
             onChange={(e) => setUrlInput(e.target.value)}
           />
         </div>
-  
+
         <button type="submit" className="mt-28 mx-4 items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded">
           Submit
         </button>
