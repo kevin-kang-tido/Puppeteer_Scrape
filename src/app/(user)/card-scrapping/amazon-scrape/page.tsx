@@ -2,29 +2,46 @@
 import { useState } from 'react';
 import { useCreateUserDefinitionMutation } from "@/redux/service/definitionService";
 import { useAppDispatch } from "@/redux/hooks";
-import {selectToken, setAccessToken} from "@/redux/features/auth/authSlice";
+import { setAccessToken } from "@/redux/features/auth/authSlice";
 import SchemaForm from './SchemaForm';
-import {useAppSelector} from "@/redux/hooks";
+import { useCreateUserDataMutation } from "@/redux/service/userDataService";
+
+type Schema = {
+    name: string;
+    description: string;
+    type: string | null;
+    keys: Array<{
+        columnName: string;
+        primaryKey: boolean;
+        foreignKey: boolean;
+        referenceTable: string | null;
+    }>;
+    properties: Array<{
+        dataType: string;
+        columnName: string;
+        required: boolean;
+    }>;
+};
 
 export default function CardScrapping() {
     const [searchTerm, setSearchTerm] = useState('');
     const [products, setProducts] = useState([]);
-    // @ts-ignore
     const [selectedProduct, setSelectedProduct] = useState<Schema | null>(null);
     const [showSchemaPreview, setShowSchemaPreview] = useState(false);
     const [createUserDefinition] = useCreateUserDefinitionMutation();
+    const [createUserData] = useCreateUserDataMutation();
     const dispatch = useAppDispatch();
-
-    const accessToken = useAppSelector(selectToken)
 
     const handleSearch = async () => {
         const res = await fetch(`/api/scrape/amazon-scrapping?searchTerm=${searchTerm}`);
         const data = await res.json();
+
+        console.log(JSON.stringify(data));
+
         setProducts(data);
     };
 
     const handleGenerateSchema = (product: any) => {
-        // @ts-ignore
         const schema: Schema = {
             name: `${product.title.replace(/\s+/g, '_')}.json`,
             description: `Generated schema for ${product.title.replace(/\s+/g, '_')}.json`,
@@ -34,10 +51,15 @@ export default function CardScrapping() {
                     columnName: "id",
                     primaryKey: true,
                     foreignKey: false,
-                    referenceTable: null
+                    referenceTable: "products"
                 }
             ],
             properties: [
+                {
+                    dataType: "string",
+                    columnName: "id",
+                    required: true
+                },
                 {
                     dataType: "string",
                     columnName: "title",
@@ -77,8 +99,10 @@ export default function CardScrapping() {
             } else if (field === 'type') {
                 updatedSchema.type = e.target.value;
             } else if (field === 'keys') {
+                // @ts-ignore
                 updatedSchema.keys[index!][e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
             } else if (field === 'properties') {
+                // @ts-ignore
                 updatedSchema.properties[index!][e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
             }
 
@@ -88,13 +112,13 @@ export default function CardScrapping() {
 
     const handleSchemaPreview = () => {
         setShowSchemaPreview(!showSchemaPreview);
-    }
+    };
 
     const handleCreateDefinition = async () => {
         if (!selectedProduct) return;
 
         try {
-            const uuid = '29a2b6cc-27ba-43a6-96ca-d093bc9ad958'; // Replace with actual UUID or fetch it dynamically
+            const uuid = 'da54d67f-e4b5-421d-946e-89cb2964be58'; // Replace with actual UUID or fetch it dynamically
             await createUserDefinition({ uuid, schema: selectedProduct }).unwrap();
             // Handle success (e.g., show a success message or refresh data)
         } catch (error) {
@@ -107,14 +131,44 @@ export default function CardScrapping() {
         const email = "srengchipor99@gmail.com";
         const password = "Jipor@09";
 
-        fetch('http://localhost:3000/api' + '/login', {
-            method: "POST",
-            body: JSON.stringify({ email, password })
-        }).then(res => res.json()).then(data => {
+        try {
+            const res = await fetch('http://localhost:3000/api/login', {
+                method: "POST",
+                body: JSON.stringify({ email, password }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await res.json();
             console.log("Data in jwt test", data);
-            dispatch(setAccessToken(data.accessToken))
-        }).catch(err => console.log(err))
-    }
+            dispatch(setAccessToken(data.accessToken));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleCreateUserData = async () => {
+        if (!selectedProduct) return;
+
+        const inputData = products.map((product: any) => ({
+            title: product.title,
+            link: product.link,
+            price: product.price,
+            image: product.image,
+            description: product.description,
+        }));
+
+        try {
+            const uuid = 'da54d67f-e4b5-421d-946e-89cb2964be58'; // Replace with actual UUID or fetch it dynamically
+            const tableName = 'products'; // Replace with your actual table name
+            const url = `https://www.amazon.com/s?k=${searchTerm}`;
+            await createUserData({ tableName, inputData }).unwrap();
+            // Handle success (e.g., show a success message or refresh data)
+        } catch (error) {
+            // Handle error
+            console.error('Failed to create user data:', error);
+        }
+    };
 
     return (
         <div className='max-w-full mx-[200px] my-[100px]'>
@@ -162,6 +216,13 @@ export default function CardScrapping() {
                     onClick={handleCreateDefinition}>
                 Save definition
             </button>
+
+            <h3>Do you want to save the data?</h3>
+            <button className='block bg-blue-500 text-white font-semibold px-3 py-2 rounded-lg text-sm mt-4'
+                    onClick={handleCreateUserData}>
+                Save data
+            </button>
+
             <button className='block bg-blue-500 text-white font-semibold px-3 py-2 rounded-lg text-sm mt-4'
                     onClick={handleLogin}>
                 Login

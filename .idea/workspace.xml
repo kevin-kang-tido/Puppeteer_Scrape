@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1bf93789-44af-45d9-ad5c-92c204524d63" name="Changes" comment="" />
+    <list default="true" id="1bf93789-44af-45d9-ad5c-92c204524d63" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/redux/service/userDataService.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(user)/card-scrapping/amazon-scrape/SchemaForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(user)/card-scrapping/amazon-scrape/SchemaForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(user)/card-scrapping/amazon-scrape/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(user)/card-scrapping/amazon-scrape/page.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,7 +37,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;scrape-card&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/cstad/final-project/front-end/Scrape_With_JavaScript/Puppeteer_Scrape&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -88,6 +93,11 @@
       <workItem from="1718865737178" duration="423000" />
       <workItem from="1718866218976" duration="6000" />
       <workItem from="1718866226519" duration="5111000" />
+      <workItem from="1718881473451" duration="254000" />
+      <workItem from="1719123469000" duration="7000" />
+      <workItem from="1719200040287" duration="1000" />
+      <workItem from="1719212377578" duration="6123000" />
+      <workItem from="1719279902188" duration="1320000" />
     </task>
     <servers />
   </component>
